@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- Two invoices must never share a number, even if two users create them at the same time. -->
+    <changeSet id="030-1" author="invoicehub">
+        <addUniqueConstraint tableName="IHUB_INVOICE"
+                             columnNames="INVOICE_NUMBER"
+                             constraintName="UC_IHUB_INVOICE_NUMBER"/>
+    </changeSet>
+</databaseChangeLog>

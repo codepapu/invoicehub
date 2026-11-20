@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.invoicehub</groupId>
+	<artifactId>invoicehub</artifactId>
+	<version>1.0.0</version>
+	<packaging>war</packaging>
+
+	<properties>
+		<openxava.version>8.0.1</openxava.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- OpenXava applications require Java 17 or higher -->
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+	</properties>
+
+	<dependencies>
+
+		<!-- Plain (free) OpenXava -->
+		<dependency>
+			<groupId>org.openxava</groupId>
+			<artifactId>openxava</artifactId>
+			<version>${openxava.version}</version>
+		</dependency>
+
+		<!-- Embedded HSQLDB, so the demo runs without installing a database -->
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>2.7.4</version>
+		</dependency>
+
+		<!-- Unit tests -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.11.4</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>invoicehub</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.12.0</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.openxava</groupId>
+									<artifactId>openxava</artifactId>
+									<version>${openxava.version}</version>
+									<outputDirectory>src/main/resources</outputDirectory>
+									<includes>xava/dtds/*</includes>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
+				<configuration>
+					<packagingExcludes>WEB-INF/lib/ecj-3*.jar,
+						WEB-INF/lib/fontbox-*.jar,
+						WEB-INF/lib/htmlunit-*.jar,
+						WEB-INF/lib/httpclient-*.jar,
+						WEB-INF/lib/httpcore-*.jar,
+						WEB-INF/lib/httpmime-*.jar,
+						WEB-INF/lib/jetty-*.jar,
+						WEB-INF/lib/junit-*.jar,
+						WEB-INF/lib/neko-htmlunit-*.jar,
+						WEB-INF/lib/pdfbox-*.jar,
+						WEB-INF/lib/serializer-*.jar,
+						WEB-INF/lib/websocket-*.jar,
+						WEB-INF/lib/xalan-*.jar,
+						WEB-INF/lib/xercesImpl-*.jar,
+						WEB-INF/lib/xml-apis-*.jar</packagingExcludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>4.1.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>com.invoicehub.InvoiceHubApplication</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- Enable annotation processing from classpath (Lombok via openxava); required since JDK 25.
+	     -proc:full only exists since JDK 23, so it lives in this profile to keep JDK 17 builds working. -->
+	<profiles>
+		<profile>
+			<id>jdk23-annotation-processing</id>
+			<activation>
+				<jdk>[23,)</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<proc>full</proc>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>

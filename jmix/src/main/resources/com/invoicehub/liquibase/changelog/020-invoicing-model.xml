@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        logicalFilePath="com/invoicehub/liquibase/changelog/020-invoicing-model.xml">
+
+    <changeSet id="1" author="invoicehub" context="!cuba">
+
+        <createTable tableName="IHUB_CATEGORY">
+            <column name="ID" type="${uuid.type}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="VERSION" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="IHUB_CUSTOMER">
+            <column name="ID" type="${uuid.type}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="VERSION" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CUSTOMER_NUMBER" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="varchar(60)"/>
+            <column name="CITY" type="varchar(50)"/>
+        </createTable>
+
+        <createTable tableName="IHUB_PRODUCT">
+            <column name="ID" type="${uuid.type}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="VERSION" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_NUMBER" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="varchar(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CATEGORY_ID" type="${uuid.type}"/>
+            <column name="UNIT_PRICE" type="decimal(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="IHUB_INVOICE">
+            <column name="ID" type="${uuid.type}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="VERSION" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INVOICE_NUMBER" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INVOICE_DATE" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VAT_PERCENTAGE" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CUSTOMER_ID" type="${uuid.type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REMARKS" type="varchar(500)"/>
+        </createTable>
+
+        <createTable tableName="IHUB_INVOICE_DETAIL">
+            <column name="ID" type="${uuid.type}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="VERSION" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INVOICE_ID" type="${uuid.type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_ID" type="${uuid.type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="QUANTITY" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UNIT_PRICE" type="decimal(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="2" author="invoicehub" context="!cuba">
+
+        <addForeignKeyConstraint baseTableName="IHUB_PRODUCT" baseColumnNames="CATEGORY_ID"
+                                 constraintName="FK_IHUB_PRODUCT_ON_CATEGORY"
+                                 referencedTableName="IHUB_CATEGORY" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="IHUB_INVOICE" baseColumnNames="CUSTOMER_ID"
+                                 constraintName="FK_IHUB_INVOICE_ON_CUSTOMER"
+                                 referencedTableName="IHUB_CUSTOMER" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="IHUB_INVOICE_DETAIL" baseColumnNames="INVOICE_ID"
+                                 constraintName="FK_IHUB_INVOICE_DETAIL_ON_INVOICE"
+                                 referencedTableName="IHUB_INVOICE" referencedColumnNames="ID"/>
+
+        <addForeignKeyConstraint baseTableName="IHUB_INVOICE_DETAIL" baseColumnNames="PRODUCT_ID"
+                                 constraintName="FK_IHUB_INVOICE_DETAIL_ON_PRODUCT"
+                                 referencedTableName="IHUB_PRODUCT" referencedColumnNames="ID"/>
+
+        <createIndex indexName="IDX_IHUB_INVOICE_CUSTOMER" tableName="IHUB_INVOICE">
+            <column name="CUSTOMER_ID"/>
+        </createIndex>
+
+        <createIndex indexName="IDX_IHUB_INVOICE_DETAIL_INVOICE" tableName="IHUB_INVOICE_DETAIL">
+            <column name="INVOICE_ID"/>
+        </createIndex>
+
+        <createIndex indexName="IDX_IHUB_INVOICE_DETAIL_PRODUCT" tableName="IHUB_INVOICE_DETAIL">
+            <column name="PRODUCT_ID"/>
+        </createIndex>
+
+    </changeSet>
+
+    <!-- Demo data: same customers, products and invoices as the OpenXava edition -->
+    <changeSet id="3" author="invoicehub" context="!cuba">
+        <insert tableName="IHUB_CATEGORY" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="c0000000-0000-4000-8000-000000000001"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="NAME" value="Software"/>
+        </insert>
+        <insert tableName="IHUB_CATEGORY" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="c0000000-0000-4000-8000-000000000002"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="NAME" value="Hardware"/>
+        </insert>
+        <insert tableName="IHUB_CATEGORY" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="c0000000-0000-4000-8000-000000000003"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="NAME" value="Services"/>
+        </insert>
+        <insert tableName="IHUB_CUSTOMER" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="a0000000-0000-4000-8000-000000000001"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="CUSTOMER_NUMBER" valueNumeric="1"/>
+            <column name="NAME" value="Acme Corporation"/>
+            <column name="EMAIL" value="billing@acme.example"/>
+            <column name="CITY" value="New York"/>
+        </insert>
+        <insert tableName="IHUB_CUSTOMER" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="a0000000-0000-4000-8000-000000000002"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="CUSTOMER_NUMBER" valueNumeric="2"/>
+            <column name="NAME" value="Globex Ltd"/>
+            <column name="EMAIL" value="accounts@globex.example"/>
+            <column name="CITY" value="London"/>
+        </insert>
+        <insert tableName="IHUB_CUSTOMER" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="a0000000-0000-4000-8000-000000000003"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="CUSTOMER_NUMBER" valueNumeric="3"/>
+            <column name="NAME" value="Initech"/>
+            <column name="EMAIL" value="finance@initech.example"/>
+            <column name="CITY" value="Hyderabad"/>
+        </insert>
+        <insert tableName="IHUB_PRODUCT" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="b0000000-0000-4000-8000-000000000001"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="PRODUCT_NUMBER" valueNumeric="1"/>
+            <column name="DESCRIPTION" value="Annual software license"/>
+            <column name="CATEGORY_ID" value="c0000000-0000-4000-8000-000000000001"/>
+            <column name="UNIT_PRICE" valueNumeric="1200.00"/>
+        </insert>
+        <insert tableName="IHUB_PRODUCT" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="b0000000-0000-4000-8000-000000000002"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="PRODUCT_NUMBER" valueNumeric="2"/>
+            <column name="DESCRIPTION" value="Laptop 14 inch"/>
+            <column name="CATEGORY_ID" value="c0000000-0000-4000-8000-000000000002"/>
+            <column name="UNIT_PRICE" valueNumeric="950.00"/>
+        </insert>
+        <insert tableName="IHUB_PRODUCT" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="b0000000-0000-4000-8000-000000000003"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="PRODUCT_NUMBER" valueNumeric="3"/>
+            <column name="DESCRIPTION" value="Wireless mouse"/>
+            <column name="CATEGORY_ID" value="c0000000-0000-4000-8000-000000000002"/>
+            <column name="UNIT_PRICE" valueNumeric="25.50"/>
+        </insert>
+        <insert tableName="IHUB_PRODUCT" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="b0000000-0000-4000-8000-000000000004"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="PRODUCT_NUMBER" valueNumeric="4"/>
+            <column name="DESCRIPTION" value="Consulting hour"/>
+            <column name="CATEGORY_ID" value="c0000000-0000-4000-8000-000000000003"/>
+            <column name="UNIT_PRICE" valueNumeric="90.00"/>
+        </insert>
+        <insert tableName="IHUB_INVOICE" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="d0000000-0000-4000-8000-000000000001"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="INVOICE_NUMBER" valueNumeric="1"/>
+            <column name="INVOICE_DATE" valueDate="2026-10-05"/>
+            <column name="VAT_PERCENTAGE" valueNumeric="20"/>
+            <column name="CUSTOMER_ID" value="a0000000-0000-4000-8000-000000000001"/>
+            <column name="REMARKS" value="Thank you for your business"/>
+        </insert>
+        <insert tableName="IHUB_INVOICE" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="d0000000-0000-4000-8000-000000000002"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="INVOICE_NUMBER" valueNumeric="2"/>
+            <column name="INVOICE_DATE" valueDate="2026-11-02"/>
+            <column name="VAT_PERCENTAGE" valueNumeric="20"/>
+            <column name="CUSTOMER_ID" value="a0000000-0000-4000-8000-000000000002"/>
+        </insert>
+        <insert tableName="IHUB_INVOICE_DETAIL" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="e0000000-0000-4000-8000-000000000001"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="INVOICE_ID" value="d0000000-0000-4000-8000-000000000001"/>
+            <column name="PRODUCT_ID" value="b0000000-0000-4000-8000-000000000001"/>
+            <column name="QUANTITY" valueNumeric="2"/>
+            <column name="UNIT_PRICE" valueNumeric="1200.00"/>
+        </insert>
+        <insert tableName="IHUB_INVOICE_DETAIL" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="e0000000-0000-4000-8000-000000000002"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="INVOICE_ID" value="d0000000-0000-4000-8000-000000000001"/>
+            <column name="PRODUCT_ID" value="b0000000-0000-4000-8000-000000000004"/>
+            <column name="QUANTITY" valueNumeric="10"/>
+            <column name="UNIT_PRICE" valueNumeric="90.00"/>
+        </insert>
+        <insert tableName="IHUB_INVOICE_DETAIL" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="e0000000-0000-4000-8000-000000000003"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="INVOICE_ID" value="d0000000-0000-4000-8000-000000000002"/>
+            <column name="PRODUCT_ID" value="b0000000-0000-4000-8000-000000000002"/>
+            <column name="QUANTITY" valueNumeric="3"/>
+            <column name="UNIT_PRICE" valueNumeric="950.00"/>
+        </insert>
+        <insert tableName="IHUB_INVOICE_DETAIL" dbms="hsqldb, postgresql, h2">
+            <column name="ID" value="e0000000-0000-4000-8000-000000000004"/>
+            <column name="VERSION" valueNumeric="1"/>
+            <column name="INVOICE_ID" value="d0000000-0000-4000-8000-000000000002"/>
+            <column name="PRODUCT_ID" value="b0000000-0000-4000-8000-000000000003"/>
+            <column name="QUANTITY" valueNumeric="3"/>
+            <column name="UNIT_PRICE" valueNumeric="25.50"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

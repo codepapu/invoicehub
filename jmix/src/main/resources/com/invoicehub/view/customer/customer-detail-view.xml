@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://CustomerDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="customerDc"
+                  class="com.invoicehub.entity.Customer">
+            <fetchPlan extends="_base">
+                <property name="invoices" fetchPlan="_base">
+                    <property name="details" fetchPlan="_base"/>
+                </property>
+            </fetchPlan>
+            <loader/>
+            <collection id="invoicesDc" property="invoices"/>
+        </instance>
+    </data>
+    <actions>
+        <action id="saveCloseAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <layout>
+        <formLayout id="form" dataContainer="customerDc">
+            <textField id="numberField" property="number"/>
+            <textField id="nameField" property="name"/>
+            <textField id="emailField" property="email"/>
+            <textField id="cityField" property="city"/>
+        </formLayout>
+        <h4 text="msg://invoices"/>
+        <dataGrid id="invoicesDataGrid"
+                  dataContainer="invoicesDc"
+                  width="100%"
+                  minHeight="12em">
+            <actions>
+                <action id="readAction" type="list_read"/>
+            </actions>
+            <columns resizable="true">
+                <column property="number"/>
+                <column property="date"/>
+                <column property="vatPercentage"/>
+                <column property="amountsSum"/>
+                <column property="total"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveCloseAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

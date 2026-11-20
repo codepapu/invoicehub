@@ -21,6 +21,9 @@ Both apps do the same things:
 - **Print invoice (PDF)** button on the invoice form.
 - The same seed data (2 invoices: totals 3,960.00 and 3,511.80).
 
+Both editions validate the same rules (unique invoice number, VAT 0-100, quantity >= 1,
+unit price >= 0, at least one line) and ship with unit tests (`mvn test` / `./gradlew test`).
+
 ## How they compare
 
 | | OpenXava | Jmix |

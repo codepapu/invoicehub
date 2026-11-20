@@ -1,0 +1,7 @@
+/temp/
+/target/
+/.settings/
+/.classpath
+/.project
+/.idea/
+/src/main/resources/xava/dtds/

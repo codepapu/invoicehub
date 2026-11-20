@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu-config xmlns="http://jmix.io/schema/flowui/menu">
+
+    <menu id="application" title="msg://com.invoicehub/menu.application.title" opened="true">
+        <item view="ihub_Invoice.list" title="msg://com.invoicehub.view.invoice/InvoiceListView.title"/>
+        <item view="ihub_Customer.list" title="msg://com.invoicehub.view.customer/CustomerListView.title"/>
+        <item view="ihub_Product.list" title="msg://com.invoicehub.view.product/ProductListView.title"/>
+        <item view="ihub_Category.list" title="msg://com.invoicehub.view.category/CategoryListView.title"/>
+        <item view="ihub_User.list" title="msg://com.invoicehub.view.user/UserListView.title"/>
+    </menu>
+
+</menu-config>

@@ -1,0 +1,16 @@
+<?xml version = "1.0" encoding = "ISO-8859-1"?>
+
+<!DOCTYPE controllers SYSTEM "dtds/controllers.dtd">
+
+<controllers>
+
+	<!-- Invoice: the typical actions plus printing the current invoice as PDF -->
+	<controller name="Invoice">
+		<extends controller="Typical"/>
+		<action name="printPDF" mode="detail" icon="file-pdf-box"
+			class="com.invoicehub.actions.PrintInvoiceAction">
+			<set property="fileName" value="invoice"/>
+		</action>
+	</controller>
+
+</controllers>

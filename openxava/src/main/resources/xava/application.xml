@@ -1,0 +1,18 @@
+<?xml version = "1.0" encoding = "ISO-8859-1"?>
+
+<!DOCTYPE application SYSTEM "dtds/application.dtd">
+
+<application name="invoicehub">
+
+	<!-- A default module for each entity is assumed with the controllers on <default-module/> -->
+	<default-module>
+		<controller name="Typical"/>
+	</default-module>
+
+	<!-- Invoice gets its own controller, with the PDF print action -->
+	<module name="Invoice">
+		<model name="Invoice"/>
+		<controller name="Invoice"/>
+	</module>
+
+</application>

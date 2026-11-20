@@ -1,0 +1,22 @@
+# Build output
+target/
+build/
+.gradle/
+out/
+
+# Jmix local database and generated frontend
+.jmix/
+node_modules/
+jmix/src/main/frontend/generated/
+jmix/pnpmfile.js
+jmix/vite.generated.ts
+jmix/webpack.generated.js
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+
+# Unpacked from the openxava jar by the maven-dependency-plugin at build time
+openxava/src/main/resources/xava/dtds/
