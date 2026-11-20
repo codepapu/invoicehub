@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!--
+      Deleting an invoice must delete its lines. Jmix's @OnDelete(CASCADE) did not do it for a hard
+      delete (an integration test caught the foreign key error), so the database does it.
+    -->
+    <changeSet id="040-1" author="invoicehub">
+        <dropForeignKeyConstraint baseTableName="IHUB_INVOICE_DETAIL"
+                                  constraintName="FK_IHUB_INVOICE_DETAIL_ON_INVOICE"/>
+        <addForeignKeyConstraint baseTableName="IHUB_INVOICE_DETAIL" baseColumnNames="INVOICE_ID"
+                                 constraintName="FK_IHUB_INVOICE_DETAIL_ON_INVOICE"
+                                 referencedTableName="IHUB_INVOICE" referencedColumnNames="ID"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>

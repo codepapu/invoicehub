@@ -42,7 +42,7 @@ Why OpenPDF instead of a report designer: the Jmix Reports add-on is commercial.
 ./gradlew test --tests 'com.invoicehub.invoice.*'
 ```
 
-Fast unit tests (no database): totals, VAT rounding, validation rules, money format and PDF generation.
+Unit tests (totals, VAT rounding, validation, money format, PDF) plus integration tests that save real invoices (lines, unique number, customer protected from deletion, lines deleted with their invoice). Run everything with `./gradlew test`; integration tests use a separate database file (`.jmix/hsqldb/ihub_test`).
 
 ## Notes
 
